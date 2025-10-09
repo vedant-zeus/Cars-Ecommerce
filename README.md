@@ -13,9 +13,6 @@ Users can browse, search, filter, and purchase cars online with a seamless and r
 | **TypeScript** | Type-safe JavaScript for better maintainability |
 | **Tailwind CSS** | Utility-first CSS framework for fast and responsive styling |
 | **Vite / Create React App** | Build tool and development environment |
-| **React Router** | Client-side routing for navigation |
-| **Axios / Fetch API** | API communication for fetching car data |
-| **Mock / Firebase / Node API** *(optional)* | Backend or mock data handling |
 | **Lucide / Heroicons** *(optional)* | Icon library for UI enhancement |
 
 ---
@@ -69,7 +66,7 @@ cd cars-ecommerce
 ---
 2. Install Dependencies
 bash
-Copy code
+
 npm install
 # or
 yarn install
@@ -77,20 +74,17 @@ yarn install
 ---
 3. Start the Development Server
 bash
-Copy code
 npm run dev
 Your app will be available at http://localhost:5173
 
 ---
 4. Build for Production
 bash
-Copy code
 npm run build
 
 ---
 5. Preview Production Build
 bash
-Copy code
 npm run preview
 
 ---
@@ -99,7 +93,6 @@ npm run preview
 If you’re using Jest or React Testing Library:
 
 bash
-Copy code
 npm run test
 📸 Screenshots
 Home Page	Car Details	Checkout
