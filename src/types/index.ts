@@ -1,3 +1,21 @@
+export interface ModificationOption {
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+}
+
+export interface ModificationCategory {
+  id: string;
+  name: string;
+  options: ModificationOption[];
+}
+
+export interface Selection {
+  categoryId: string;
+  optionId: string;
+}
+
 export interface Vehicle {
   id: string;
   make: string;
@@ -18,11 +36,16 @@ export interface Vehicle {
     rating: number;
     phone: string;
   };
+  modifications?: ModificationCategory[];
+  featured?: boolean;
 }
 
 export interface CartItem {
+  id: string; // Unique ID for each specific configuration
   vehicle: Vehicle;
   quantity: number;
+  selectedModifications: Selection[];
+  totalPrice: number;
 }
 
 export interface FilterState {

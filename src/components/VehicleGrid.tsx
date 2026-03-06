@@ -1,27 +1,26 @@
-import React from 'react';
-import { Vehicle } from '../types';
+import { Vehicle, Selection } from '../types';
 import VehicleCard from './VehicleCard';
 
 interface VehicleGridProps {
   vehicles: Vehicle[];
   onViewDetails: (vehicle: Vehicle) => void;
-  onAddToCart: (vehicle: Vehicle) => void;
+  onAddToCart: (vehicle: Vehicle, selections?: Selection[], totalPrice?: number) => void;
   onToggleFavorite: (vehicleId: string) => void;
   favorites: string[];
 }
 
-export default function VehicleGrid({ 
-  vehicles, 
-  onViewDetails, 
-  onAddToCart, 
+export default function VehicleGrid({
+  vehicles,
+  onViewDetails,
+  onAddToCart,
   onToggleFavorite,
-  favorites 
+  favorites
 }: VehicleGridProps) {
   if (vehicles.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="text-gray-500 text-lg">No vehicles found matching your criteria</div>
-        <div className="text-gray-400 mt-2">Try adjusting your filters</div>
+      <div className="text-center py-24 bg-stealth-800 rounded-[3rem] border border-white/5">
+        <div className="text-slate-500 text-lg font-black uppercase tracking-widest">No units detected</div>
+        <div className="text-slate-600 mt-2 text-xs font-bold uppercase tracking-[0.2em]">Adjust parameters to reset inventory</div>
       </div>
     );
   }

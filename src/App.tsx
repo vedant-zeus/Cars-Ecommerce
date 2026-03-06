@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import SearchFilters from './components/SearchFilters';
@@ -9,7 +9,7 @@ import Cart from './components/Cart';
 import CartPage from './components/CartPage';
 import Footer from './components/Footer';
 import { vehicles } from './data/vehicles';
-import { Vehicle, CartItem, FilterState } from './types';
+import { Vehicle, CartItem, FilterState, Selection } from './types';
 
 function App() {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
@@ -38,8 +38,8 @@ function App() {
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         if (!vehicle.make.toLowerCase().includes(query) &&
-            !vehicle.model.toLowerCase().includes(query) &&
-            !vehicle.location.toLowerCase().includes(query)) {
+          !vehicle.model.toLowerCase().includes(query) &&
+          !vehicle.location.toLowerCase().includes(query)) {
           return false;
         }
       }
@@ -73,28 +73,37 @@ function App() {
     return filtered;
   }, [searchQuery, filters]);
 
-  const handleAddToCart = (vehicle: Vehicle) => {
+  const handleAddToCart = (vehicle: Vehicle, selectedModifications: Selection[] = [], totalPrice?: number) => {
+    const finalPrice = totalPrice || vehicle.price;
+    const configId = `${vehicle.id}-${selectedModifications.map(m => m.optionId).join('-')}`;
+
     setCartItems(prev => {
-      const existing = prev.find(item => item.vehicle.id === vehicle.id);
+      const existing = prev.find(item => item.id === configId);
       if (existing) {
         return prev.map(item =>
-          item.vehicle.id === vehicle.id
+          item.id === configId
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...prev, { vehicle, quantity: 1 }];
+      return [...prev, {
+        id: configId,
+        vehicle,
+        quantity: 1,
+        selectedModifications,
+        totalPrice: finalPrice
+      }];
     });
     setSelectedVehicle(null);
   };
 
-  const handleUpdateQuantity = (vehicleId: string, quantity: number) => {
+  const handleUpdateQuantity = (id: string, quantity: number) => {
     if (quantity === 0) {
-      setCartItems(prev => prev.filter(item => item.vehicle.id !== vehicleId));
+      setCartItems(prev => prev.filter(item => item.id !== id));
     } else {
       setCartItems(prev =>
         prev.map(item =>
-          item.vehicle.id === vehicleId
+          item.id === id
             ? { ...item, quantity }
             : item
         )
@@ -102,8 +111,8 @@ function App() {
     }
   };
 
-  const handleRemoveItem = (vehicleId: string) => {
-    setCartItems(prev => prev.filter(item => item.vehicle.id !== vehicleId));
+  const handleRemoveItem = (id: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
   const handleToggleFavorite = (vehicleId: string) => {
@@ -145,16 +154,16 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-stealth-900 text-slate-200">
       <Header
         cartCount={cartCount}
         onCartToggle={() => setShowCartPage(true)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
       />
-      
+
       <Hero />
-      
+
       <SearchFilters
         filters={filters}
         onFilterChange={setFilters}
@@ -162,11 +171,15 @@ function App() {
         onToggle={() => setShowFilters(!showFilters)}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="flex items-center justify-between mb-12">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Available Vehicles</h2>
-            <p className="text-gray-600 mt-1">{filteredVehicles.length} vehicles found</p>
+            <h2 className="text-3xl font-black text-white uppercase tracking-tighter italic">
+              Available <span className="text-neon-cyan">Inventory</span>
+            </h2>
+            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-2">
+              {filteredVehicles.length} Elite units ready for deployment
+            </p>
           </div>
         </div>
 
